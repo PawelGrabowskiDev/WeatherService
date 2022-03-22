@@ -1,22 +1,27 @@
 package pl.grabowski.weatherservice.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties
 public class CurrentWeather {
     private String cityName;
+    private String obsTime;
     private double windSpd;
     private double currentTemp;
+    private double pressure;
 
     @JsonCreator
-    public CurrentWeather(@JsonProperty("city_name") String city_name,
-                          @JsonProperty("wind_spd") double wind_spd,
-                          @JsonProperty("temp")  double temp) {
-        this.cityName = city_name;
-        this.windSpd = wind_spd;
-        this.currentTemp = temp;
+    public CurrentWeather(
+            @JsonProperty("ob_time") String obsTime,
+            @JsonProperty("city_name") String cityName,
+            @JsonProperty("wind_spd") double windSpd,
+            @JsonProperty("temp") double currentTemp,
+            @JsonProperty("pres") double pressure){
+        this.cityName = cityName;
+        this.obsTime = obsTime;
+        this.windSpd = windSpd;
+        this.currentTemp = currentTemp;
+        this.pressure = pressure;
     }
 
     public String getCityName() {
@@ -25,6 +30,14 @@ public class CurrentWeather {
 
     public void setCityName(String cityName) {
         this.cityName = cityName;
+    }
+
+    public String getObsTime() {
+        return obsTime;
+    }
+
+    public void setObsTime(String obsTime) {
+        this.obsTime = obsTime;
     }
 
     public double getWindSpd() {
@@ -43,12 +56,11 @@ public class CurrentWeather {
         this.currentTemp = currentTemp;
     }
 
-    @Override
-    public String toString() {
-        return "CurrentWeather{" +
-                "cityName='" + cityName + '\'' +
-                ", windSpd=" + windSpd +
-                ", currentTemp=" + currentTemp +
-                '}';
+    public double getPressure() {
+        return pressure;
+    }
+
+    public void setPressure(double pressure) {
+        this.pressure = pressure;
     }
 }
