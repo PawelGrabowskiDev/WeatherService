@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.grabowski.weatherservice.Controller.Dto.WeatherResponseDto;
 import pl.grabowski.weatherservice.Service.JsonParseService;
+import pl.grabowski.weatherservice.Service.JsonParseServiceImpl;
 import pl.grabowski.weatherservice.domain.WeatherData;
 
 import static pl.grabowski.weatherservice.Config.WeatherbitApiKey.*;
@@ -18,9 +19,9 @@ import static pl.grabowski.weatherservice.Config.WeatherbitApiKey.*;
 @RequestMapping(path= "/weather")
 public class WeatherController {
 
-    private final JsonParseService parseService;
+    private final JsonParseServiceImpl parseService;
 
-    public WeatherController(JsonParseService parseService) {
+    public WeatherController(JsonParseServiceImpl parseService) {
         this.parseService = parseService;
     }
 

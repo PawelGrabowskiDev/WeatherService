@@ -1,0 +1,47 @@
+{
+  "data": [
+    {
+      "rh": 13,
+      "pod": "d",
+      "lon": 21.01178,
+      "pres": 1017.1,
+      "timezone": "Europe/Warsaw",
+      "ob_time": "2022-03-23 13:35",
+      "country_code": "PL",
+      "clouds": 0,
+      "ts": 1648042500,
+      "solar_rad": 387.1,
+      "state_code": "78",
+      "city_name": "Warsaw",
+      "wind_spd": 2.41125,
+      "wind_cdir_full": "west-northwest",
+      "wind_cdir": "WNW",
+      "slp": 1027.69,
+      "vis": 5,
+      "h_angle": 45,
+      "sunset": "16:54",
+      "dni": 735.69,
+      "dewpt": 5.9,
+      "snow": 0,
+      "uv": 2.64918,
+      "precip": 0,
+      "wind_dir": 292,
+      "sunrise": "04:29",
+      "ghi": 387.06,
+      "dhi": 86.26,
+      "aqi": 143,
+      "lat": 52.22977,
+      "weather": {
+        "icon": "c01d",
+        "code": 800,
+        "description": "Clear sky"
+      },
+      "datetime": "2022-03-23:13",
+      "temp": 21.7,
+      "station": "E5546",
+      "elev_angle": 24.69,
+      "app_temp": 20.5
+    }
+  ],
+  "count": 1
+}
