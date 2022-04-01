@@ -1,4 +1,4 @@
-package pl.grabowski.weatherservice.Controller.Dto;
+package pl.grabowski.weatherservice.controller.dto;
 
 public class WeatherResponseDto {
     private final String cityName;

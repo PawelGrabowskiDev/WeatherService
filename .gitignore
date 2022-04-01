@@ -4,7 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-/src/main/java/pl/grabowski/weatherservice/Config/WeatherbitApiKey.java
+/src/main/java/pl/grabowski/weatherservice/config/WeatherbitApiKey.java
 ### STS ###
 .apt_generated
 .classpath

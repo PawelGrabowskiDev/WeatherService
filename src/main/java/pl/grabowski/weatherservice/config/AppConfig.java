@@ -1,4 +1,4 @@
-package pl.grabowski.weatherservice.Config;
+package pl.grabowski.weatherservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
