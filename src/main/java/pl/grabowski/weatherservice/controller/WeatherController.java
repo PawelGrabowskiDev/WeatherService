@@ -44,7 +44,7 @@ public class WeatherController {
             @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) throws JsonProcessingException {
             if(date.isAfter(LocalDate.now().minusDays(1)) && date.isBefore(LocalDate.now().plusDays(17))){
                 log.info("Date is Ok");
-                var list = weatherService.getForecastListFromApi();
+                var list = weatherService.getForecastCityList();
             }
         return new ResponseEntity<>(null, HttpStatus.OK);
     }

@@ -23,7 +23,6 @@ public class ForecastResource {
     }
 
     public String getForecast (double lat, double lon) {
-
         UriComponents uriComponents = UriComponentsBuilder
                 .fromHttpUrl(this.weatherApiUrl)
                 .queryParam("lat", lat)
