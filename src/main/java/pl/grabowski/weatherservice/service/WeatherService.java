@@ -5,14 +5,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import pl.grabowski.weatherservice.config.AppConfig;
+import pl.grabowski.weatherservice.controller.dto.WeatherDto;
 import pl.grabowski.weatherservice.domain.CityForecast;
 import pl.grabowski.weatherservice.pojo.AppCity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -35,20 +37,19 @@ public class WeatherService {
         });
     }
 
-    public List<CityForecast> getForecastCityList() throws JsonProcessingException {
+    public List<WeatherDto> getForecast(LocalDate date) throws JsonProcessingException {
         List<CityForecast> citiesForecast = new ArrayList<>();
-        for (int i = 0; i <= 4; i++) {
+        for (int i = 0; i < city.getCities().size(); i++) {
             var json = forecastResource.getForecast(city.getCities().get(i).get("lat"), city.getCities().get(i).get("lon"));
             citiesForecast.add(jsonParseToObject(json));
         }
-        /*citiesForecast.add(jsonParseToObject(forecastResource.getForecast(city.getCities().get(0).get("lat"), city.getCities().get(0).get("lon"))));
-        citiesForecast.add(jsonParseToObject(forecastResource.getForecast(city.getCities().get(1).get("lat"), city.getCities().get(1).get("lon"))));
-        citiesForecast.add(jsonParseToObject(forecastResource.getForecast(city.getCities().get(2).get("lat"), city.getCities().get(2).get("lon"))));
-        citiesForecast.add(jsonParseToObject(forecastResource.getForecast(city.getCities().get(3).get("lat"), city.getCities().get(3).get("lon"))));
-        citiesForecast.add(jsonParseToObject(forecastResource.getForecast(city.getCities().get(4).get("lat"), city.getCities().get(4).get("lon"))));
-        */
-        return citiesForecast;
+        var weatherDto = citiesForecast.stream().map(forecast -> new WeatherDto(
+                forecast.getCityName(),
+                forecast.getForecastByDate(date).get().getLocalDate(),
+                forecast.getForecastByDate(date).get().getWindSpeed(),
+                forecast.getForecastByDate(date).get().getTemp()
+        )).collect(Collectors.toList());
+
+        return weatherDto;
     }
-
-
 }

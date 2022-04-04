@@ -6,11 +6,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.grabowski.weatherservice.controller.dto.WeatherResponseDto;
+import pl.grabowski.weatherservice.controller.dto.WeatherDto;
 import pl.grabowski.weatherservice.service.ForecastResource;
 import pl.grabowski.weatherservice.service.WeatherService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -26,9 +27,9 @@ public class WeatherController {
     }
 
     /*@GetMapping("/{city}")
-    ResponseEntity<WeatherResponseDto> getCurrentWeatherFromApi(@PathVariable(required = true) String city) throws JsonProcessingException {
+    ResponseEntity<WeatherDto> getCurrentWeatherFromApi(@PathVariable(required = true) String city) throws JsonProcessingException {
         WeatherData weatherData =  parseService.parse("https://api.weatherbit.io/v2.0/current?city="+city+"&key="+ApiKey);
-        WeatherResponseDto weatherResponse = new WeatherResponseDto(
+        WeatherDto weatherResponse = new WeatherDto(
                 weatherData.getCurrentWeather().get(0).getCityName(),
                 weatherData.getCurrentWeather().get(0).getObsTime(),
                 weatherData.getCurrentWeather().get(0).getWindSpd(),
@@ -39,13 +40,13 @@ public class WeatherController {
     }*/
 
     @GetMapping
-    ResponseEntity<WeatherResponseDto> getBestWeatherFromApiByDay(
+    ResponseEntity<List<WeatherDto>> getBestWeatherFromApiByDay(
             @RequestParam("date")
             @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) throws JsonProcessingException {
             if(date.isAfter(LocalDate.now().minusDays(1)) && date.isBefore(LocalDate.now().plusDays(17))){
                 log.info("Date is Ok");
-                var list = weatherService.getForecastCityList();
+                return new ResponseEntity<>(weatherService.getForecast(date), HttpStatus.OK);
             }
-        return new ResponseEntity<>(null, HttpStatus.OK);
+       return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }
