@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.grabowski.weatherservice.controller.dto.Weather;
+import pl.grabowski.weatherservice.service.BestWeatherSelector;
 import pl.grabowski.weatherservice.service.ForecastResource;
 import pl.grabowski.weatherservice.service.WeatherService;
 
@@ -20,33 +21,23 @@ public class WeatherController {
 
     private final ForecastResource parseService;
     private final WeatherService weatherService;
+    private final BestWeatherSelector bestWeatherSelector;
 
-    public WeatherController(ForecastResource parseService, WeatherService weatherService) {
+    public WeatherController(ForecastResource parseService, WeatherService weatherService, BestWeatherSelector bestWeatherSelector) {
         this.parseService = parseService;
         this.weatherService = weatherService;
+        this.bestWeatherSelector = bestWeatherSelector;
     }
 
-    /*@GetMapping("/{city}")
-    ResponseEntity<Weather> getCurrentWeatherFromApi(@PathVariable(required = true) String city) throws JsonProcessingException {
-        WeatherData weatherData =  parseService.parse("https://api.weatherbit.io/v2.0/current?city="+city+"&key="+ApiKey);
-        Weather weatherResponse = new Weather(
-                weatherData.getCurrentWeather().get(0).getCityName(),
-                weatherData.getCurrentWeather().get(0).getObsTime(),
-                weatherData.getCurrentWeather().get(0).getWindSpd(),
-                weatherData.getCurrentWeather().get(0).getCurrentTemp(),
-                weatherData.getCurrentWeather().get(0).getPressure()
-        );
-        return new ResponseEntity<>(weatherResponse, HttpStatus.OK);
-    }*/
-
     @GetMapping
-    ResponseEntity<List<Weather>> getBestWeatherFromApiByDay(
-            @RequestParam("date")
-            @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) throws JsonProcessingException {
-            if(date.isAfter(LocalDate.now().minusDays(1)) && date.isBefore(LocalDate.now().plusDays(17))){
-                log.info("Date is Ok");
-                return new ResponseEntity<>(weatherService.getForecast(date), HttpStatus.OK);
+    ResponseEntity<Weather> getBestWeatherFromApiByDay(@RequestParam("date") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) throws JsonProcessingException {
+            if(!date.isAfter(LocalDate.now().minusDays(1)) && !date.isBefore(LocalDate.now().plusDays(17))){
+                return ResponseEntity.badRequest().build();
             }
-       return new ResponseEntity<>(null, HttpStatus.OK);
+
+        log.info("Date is Ok");
+        var forecast = weatherService.getForecast(date);
+        var bestWeatherResponse = bestWeatherSelector.getBestCity(forecast);
+        return bestWeatherResponse.map(weather -> new ResponseEntity<>(weather, HttpStatus.OK)).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 }
