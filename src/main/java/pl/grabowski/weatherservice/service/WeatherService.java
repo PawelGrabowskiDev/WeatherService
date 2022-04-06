@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.grabowski.weatherservice.config.AppConfig;
-import pl.grabowski.weatherservice.controller.dto.WeatherDto;
+import pl.grabowski.weatherservice.controller.dto.Weather;
 import pl.grabowski.weatherservice.domain.CityForecast;
 import pl.grabowski.weatherservice.pojo.AppCity;
 
@@ -37,13 +37,13 @@ public class WeatherService {
         });
     }
 
-    public List<WeatherDto> getForecast(LocalDate date) throws JsonProcessingException {
+    public List<Weather> getForecast(LocalDate date) throws JsonProcessingException {
         List<CityForecast> citiesForecast = new ArrayList<>();
         for (int i = 0; i < city.getCities().size(); i++) {
             var json = forecastResource.getForecast(city.getCities().get(i).get("lat"), city.getCities().get(i).get("lon"));
             citiesForecast.add(jsonParseToObject(json));
         }
-        var weatherDto = citiesForecast.stream().map(forecast -> new WeatherDto(
+        var weatherDto = citiesForecast.stream().map(forecast -> new Weather(
                 forecast.getCityName(),
                 forecast.getForecastByDate(date).get().getLocalDate(),
                 forecast.getForecastByDate(date).get().getWindSpeed(),

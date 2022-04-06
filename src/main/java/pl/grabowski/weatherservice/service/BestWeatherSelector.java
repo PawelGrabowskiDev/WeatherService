@@ -1,11 +1,9 @@
 package pl.grabowski.weatherservice.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.grabowski.weatherservice.controller.dto.WeatherDto;
-
-import java.time.LocalDate;
+import pl.grabowski.weatherservice.controller.dto.Weather;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +17,12 @@ public class BestWeatherSelector {
         this.weatherService = weatherService;
     }
 
-    public Optional<List<WeatherDto>> getBestCity(LocalDate date) throws JsonProcessingException {
-
-        return Optional.empty();
+    public Optional<Weather> getBestCity(List<Weather> weather) {
+        return weather.stream()
+                .filter(forecast -> forecast.getWindSpd() >5 )
+                .filter(forecast -> forecast.getWindSpd() < 18 )
+                .filter(forecast -> forecast.getTemp() > 5 )
+                .filter(forecast -> forecast.getTemp() < 35)
+                .max(Comparator.comparing(Weather::calculateBestWeatherValue));
     }
 }

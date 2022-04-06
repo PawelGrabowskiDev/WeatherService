@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.grabowski.weatherservice.controller.dto.WeatherDto;
+import pl.grabowski.weatherservice.controller.dto.Weather;
 import pl.grabowski.weatherservice.service.ForecastResource;
 import pl.grabowski.weatherservice.service.WeatherService;
 
@@ -27,9 +27,9 @@ public class WeatherController {
     }
 
     /*@GetMapping("/{city}")
-    ResponseEntity<WeatherDto> getCurrentWeatherFromApi(@PathVariable(required = true) String city) throws JsonProcessingException {
+    ResponseEntity<Weather> getCurrentWeatherFromApi(@PathVariable(required = true) String city) throws JsonProcessingException {
         WeatherData weatherData =  parseService.parse("https://api.weatherbit.io/v2.0/current?city="+city+"&key="+ApiKey);
-        WeatherDto weatherResponse = new WeatherDto(
+        Weather weatherResponse = new Weather(
                 weatherData.getCurrentWeather().get(0).getCityName(),
                 weatherData.getCurrentWeather().get(0).getObsTime(),
                 weatherData.getCurrentWeather().get(0).getWindSpd(),
@@ -40,7 +40,7 @@ public class WeatherController {
     }*/
 
     @GetMapping
-    ResponseEntity<List<WeatherDto>> getBestWeatherFromApiByDay(
+    ResponseEntity<List<Weather>> getBestWeatherFromApiByDay(
             @RequestParam("date")
             @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) throws JsonProcessingException {
             if(date.isAfter(LocalDate.now().minusDays(1)) && date.isBefore(LocalDate.now().plusDays(17))){
