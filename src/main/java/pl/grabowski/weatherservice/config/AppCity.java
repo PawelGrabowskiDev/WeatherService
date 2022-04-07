@@ -1,4 +1,4 @@
-package pl.grabowski.weatherservice.pojo;
+package pl.grabowski.weatherservice.config;
 
 import lombok.Getter;
 import lombok.Setter;

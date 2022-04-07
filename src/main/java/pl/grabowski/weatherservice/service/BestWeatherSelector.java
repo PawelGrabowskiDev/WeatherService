@@ -10,13 +10,6 @@ import java.util.Optional;
 @Service
 public class BestWeatherSelector {
 
-    private final WeatherService weatherService;
-
-    @Autowired
-    public BestWeatherSelector(WeatherService weatherService) {
-        this.weatherService = weatherService;
-    }
-
     public Optional<Weather> getBestCity(List<Weather> weather) {
         return weather.stream()
                 .filter(forecast -> forecast.getWindSpd() >5 )
