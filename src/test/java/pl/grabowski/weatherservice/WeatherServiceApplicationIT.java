@@ -8,6 +8,8 @@ import org.junit.Rule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -20,8 +22,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.*;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willReturn;
+import static org.mockito.Mockito.mockStatic;
 import static pl.grabowski.weatherservice.config.WeatherbitApiKey.ApiKey;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -30,11 +37,11 @@ class WeatherServiceApplicationIT {
 
     @LocalServerPort
     private int port;
-
     @Rule
     WireMockServer wireMock = new WireMockServer(9090);
     @Autowired
     TestRestTemplate restTemplate;
+
     /*ForecastResource forecastResource = new ForecastResource(restTemplate);
     ObjectMapper objectMapper = new ObjectMapper();
     AppCity appCity = new AppCity();
@@ -89,14 +96,15 @@ class WeatherServiceApplicationIT {
 
     @Test
     void should_return_error_if_date_is_invalid(){
-        HttpHeaders headers = new HttpHeaders();
-        HttpEntity requestHeaders = new HttpEntity(headers);
+        Clock clock = Clock.fixed(Instant.parse("2014-12-22T10:15:30.00Z"), ZoneId.of("UTC"));
         UriComponents uriComponents = UriComponentsBuilder
                 .fromHttpUrl("http://localhost:"+port+"/weather")
-                .queryParam("date", "10-04-2022")
+                .queryParam("date", "04-04-2022")
                 .build();
 
-
+        var result = restTemplate.exchange(uriComponents.toString(), HttpMethod.GET, null, String.class);
+        assertThat(result.getStatusCodeValue()).isEqualTo(400);
+        assertThat(result.getBody()).isEqualTo("Date is wrong!");
     }
 
 }
