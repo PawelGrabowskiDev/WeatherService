@@ -1,6 +1,5 @@
 package pl.grabowski.weatherservice.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.grabowski.weatherservice.controller.dto.Weather;
 import java.util.Comparator;

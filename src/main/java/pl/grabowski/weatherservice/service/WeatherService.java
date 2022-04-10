@@ -3,19 +3,18 @@ package pl.grabowski.weatherservice.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.grabowski.weatherservice.controller.dto.Weather;
 import pl.grabowski.weatherservice.domain.CityForecast;
 import pl.grabowski.weatherservice.config.AppCity;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class WeatherService {
     private final ForecastResource forecastResource;
     private final ObjectMapper objectMapper;
