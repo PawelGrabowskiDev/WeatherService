@@ -30,14 +30,12 @@ public class WeatherController {
     }
 
     @GetMapping
-    ResponseEntity<Weather> getBestWeatherFromApiByDay(@RequestParam("date") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) throws JsonProcessingException {
-            if(!date.isAfter(LocalDate.now().minusDays(1)) && !date.isBefore(LocalDate.now().plusDays(17))){
-                return ResponseEntity.badRequest().build();
-            }
-
-        log.info("Date is Ok");
-        var forecast = weatherService.getForecast(date);
-        var bestWeatherResponse = bestWeatherSelector.getBestCity(forecast);
-        return bestWeatherResponse.map(weather -> new ResponseEntity<>(weather, HttpStatus.OK)).orElseGet(() -> ResponseEntity.badRequest().build());
+    ResponseEntity<?> getBestWeatherFromApiByDay(@RequestParam("date") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) throws JsonProcessingException {
+        if(date.isAfter(LocalDate.now().minusDays(1)) && date.isBefore(LocalDate.now().plusDays(17))){
+            var forecast = weatherService.getForecast(date);
+            var bestWeatherResponse = bestWeatherSelector.getBestCity(forecast);
+            return bestWeatherResponse.map(weather -> new ResponseEntity<>(weather, HttpStatus.OK)).orElseGet(() -> ResponseEntity.badRequest().build());
+        }
+        return ResponseEntity.badRequest().body("Date is wrong!");
     }
 }
