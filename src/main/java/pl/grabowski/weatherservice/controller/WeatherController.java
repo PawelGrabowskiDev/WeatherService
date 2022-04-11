@@ -35,7 +35,7 @@ public class WeatherController {
         if(date.isAfter(LocalDate.now(clock).minusDays(1)) && date.isBefore(LocalDate.now(clock).plusDays(17))){
             var forecast = weatherService.getForecast(date);
             var bestWeatherResponse = bestWeatherSelector.getBestCity(forecast);
-            return bestWeatherResponse.map(weather -> new ResponseEntity<>(weather, HttpStatus.OK)).orElseGet(() -> ResponseEntity.badRequest().build());
+            return bestWeatherResponse.map(weather -> new ResponseEntity<>(weather, HttpStatus.OK)).orElseGet(() -> ResponseEntity.noContent().build());
         }
         return ResponseEntity.badRequest().body("Date is wrong!");
     }
