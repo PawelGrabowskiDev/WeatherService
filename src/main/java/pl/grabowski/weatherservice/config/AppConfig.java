@@ -3,7 +3,9 @@ package pl.grabowski.weatherservice.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.client.RestTemplate;
+import pl.grabowski.weatherservice.service.ForecastResource;
 
 import java.time.Clock;
 
@@ -19,5 +21,11 @@ public class AppConfig {
     @Profile(value = "prod")
     public Clock clock() {
         return Clock.systemDefaultZone();
+    }
+
+    @Configuration
+    @PropertySource("classpath:application-prod.properties")
+    @Profile(value = "prod")
+    static class defaultConfig{
     }
 }

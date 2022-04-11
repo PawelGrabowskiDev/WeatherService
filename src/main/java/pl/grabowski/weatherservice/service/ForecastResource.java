@@ -10,7 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import static pl.grabowski.weatherservice.config.WeatherbitApiKey.ApiKey;
 
 @Service
-@PropertySource("classpath:application.properties")
+
 public class ForecastResource {
 
     @Value("${forecastResource.weatherApiUrl}")

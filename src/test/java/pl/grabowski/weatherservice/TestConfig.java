@@ -25,5 +25,11 @@ public class TestConfig {
        return  Clock.fixed(DATE.atStartOfDay(ZoneId.systemDefault()).toInstant(),ZoneId.systemDefault());
     }
 
+    @Configuration
+    @PropertySource("classpath:application-test.properties")
+    @Profile(value = "test")
+    static class testConfig{
+    }
+
 
 }
