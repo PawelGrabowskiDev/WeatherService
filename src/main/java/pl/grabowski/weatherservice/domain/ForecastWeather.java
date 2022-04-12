@@ -3,11 +3,12 @@ package pl.grabowski.weatherservice.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
-@Getter
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ForecastWeather {
     private final double windSpeed;
