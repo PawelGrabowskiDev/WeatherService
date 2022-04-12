@@ -21,13 +21,11 @@ public class WeatherController {
     private final ForecastResource parseService;
     private final WeatherService weatherService;
     private final BestWeatherSelector bestWeatherSelector;
-    private final Clock clock;
 
-    public WeatherController(ForecastResource parseService, WeatherService weatherService, BestWeatherSelector bestWeatherSelector, Clock clock) {
+    public WeatherController(ForecastResource parseService, WeatherService weatherService, BestWeatherSelector bestWeatherSelector) {
         this.parseService = parseService;
         this.weatherService = weatherService;
         this.bestWeatherSelector = bestWeatherSelector;
-        this.clock = clock;
     }
 
     @GetMapping
