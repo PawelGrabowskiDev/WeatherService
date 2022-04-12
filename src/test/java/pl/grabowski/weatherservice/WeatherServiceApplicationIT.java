@@ -72,7 +72,7 @@ class WeatherServiceApplicationIT {
 
 
     @Test
-    void should_build_valid_url() throws JsonProcessingException {
+    void should_build_valid_weather_api_url(){
         //given
 
         //when
@@ -84,12 +84,12 @@ class WeatherServiceApplicationIT {
         //given
         firstCity("BadConditions.json");
         secondCity("GoodConditions.json");
-        UriComponents uriComponents = UriComponentsBuilder
+        UriComponents url = UriComponentsBuilder
                 .fromHttpUrl("http://localhost:"+port+"/weather")
                 .queryParam("date", "12-04-2022")
                 .build();
 
-        var result = restTemplate.getForEntity(uriComponents.toString(), String.class);
+        var result = restTemplate.getForEntity(url.toString(), String.class);
         var json = JsonPath.parse(result.getBody());
         assertThat(result.getStatusCodeValue()).isEqualTo(200);
         assertThat(json.read("$.cityName", String.class)).isEqualTo("Bridgetown");
@@ -101,24 +101,24 @@ class WeatherServiceApplicationIT {
     void should_return_no_content_when_no_city_has_good_conditions(){
         firstCity("BadConditions.json");
         secondCity("BadConditions.json");
-        UriComponents uriComponents = UriComponentsBuilder
+        UriComponents url = UriComponentsBuilder
                 .fromHttpUrl("http://localhost:"+port+"/weather")
                 .queryParam("date", "12-04-2022")
                 .build();
 
-        var result = restTemplate.getForEntity(uriComponents.toString(), String.class);
+        var result = restTemplate.getForEntity(url.toString(), String.class);
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 
     @Test
     void should_return_error_if_date_is_invalid(){
        //Clock clock = Clock.fixed(Instant.parse("2014-12-22T10:15:30.00Z"), ZoneId.of("UTC"));
-        UriComponents uriComponents = UriComponentsBuilder
+        UriComponents url = UriComponentsBuilder
                 .fromHttpUrl("http://localhost:"+port+"/weather")
                 .queryParam("date", "27-05-2022")
                 .build();
 
-        var result = restTemplate.getForEntity(uriComponents.toString(),String.class);
+        var result = restTemplate.getForEntity(url.toString(),String.class);
         assertThat(result.getStatusCodeValue()).isEqualTo(400);
         assertThat(result.getBody()).isEqualTo("Date is wrong!");
     }
