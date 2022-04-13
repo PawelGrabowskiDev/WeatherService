@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import pl.grabowski.weatherservice.config.AppConfig;
 import pl.grabowski.weatherservice.config.WeatherbitApiKey;
 
+import javax.servlet.UnavailableException;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -40,7 +41,7 @@ class ForecastResourceTest {
     ForecastResource forecastResource = new ForecastResource(mockRestTemplate);
 
     @Test
-    void getForecast() {
+    void getForecast() throws UnavailableException {
         //given
         var validUrl = "https://api.weatherbit.io/v2.0/forecast/daily?&lat=12&lon=43&key="+ ApiKey;
         //when
