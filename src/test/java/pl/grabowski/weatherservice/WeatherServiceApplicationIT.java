@@ -1,11 +1,8 @@
 package pl.grabowski.weatherservice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Rule;
 import org.junit.jupiter.api.AfterEach;
@@ -19,13 +16,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.time.*;
+import pl.grabowski.weatherservice.exceptions.WeatherApiExceptions;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static pl.grabowski.weatherservice.config.WeatherbitApiKey.ApiKey;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -70,12 +65,19 @@ class WeatherServiceApplicationIT {
                         .withBodyFile(bodyJson)));
     }
 
-
     @Test
-    void should_build_valid_weather_api_url(){
-        //given
+    void should_pass_the_error_returned_by_weather_api(){
+        stubFor(get(urlPathEqualTo("/test/weather/api"))
+                        .withQueryParam("lat", equalTo("1000"))
+                        .withQueryParam("lon", equalTo("1000"))
+                .willReturn(aResponse().withBody("")));
 
-        //when
+        UriComponents url = UriComponentsBuilder
+                .fromHttpUrl("http://localhost:"+port+"/weather")
+                .queryParam("date", "12-04-2022")
+                .build();
+       var result = restTemplate.getForEntity(url.toString(), String.class);
+       assertThat(result.getBody()).contains("Weather Api error: ");
 
     }
 
@@ -112,7 +114,6 @@ class WeatherServiceApplicationIT {
 
     @Test
     void should_return_error_if_date_is_invalid(){
-       //Clock clock = Clock.fixed(Instant.parse("2014-12-22T10:15:30.00Z"), ZoneId.of("UTC"));
         UriComponents url = UriComponentsBuilder
                 .fromHttpUrl("http://localhost:"+port+"/weather")
                 .queryParam("date", "27-05-2022")
