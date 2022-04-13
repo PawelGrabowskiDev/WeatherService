@@ -9,12 +9,17 @@ import java.util.Optional;
 @Service
 public class BestWeatherSelector {
 
+    final int minWindSpd = 5;
+    final int maxWindSpd = 18;
+    final int minTemp = 5;
+    final int maxTemp = 35;
+
     public Optional<Weather> getBestCity(List<Weather> weather) {
         return weather.stream()
-                .filter(forecast -> forecast.getWindSpd() >5 )
-                .filter(forecast -> forecast.getWindSpd() < 18 )
-                .filter(forecast -> forecast.getTemp() > 5 )
-                .filter(forecast -> forecast.getTemp() < 35)
+                .filter(forecast -> forecast.getWindSpd() > this.minWindSpd)
+                .filter(forecast -> forecast.getWindSpd() < this.maxWindSpd)
+                .filter(forecast -> forecast.getTemp() > this.minTemp)
+                .filter(forecast -> forecast.getTemp() < this.maxTemp)
                 .max(Comparator.comparing(Weather::calculateBestWeatherValue));
     }
 }

@@ -3,12 +3,13 @@ package pl.grabowski.weatherservice.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Getter;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-@Getter
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CityForecast {
     private final List<ForecastWeather> forecastWeatherList;
@@ -19,12 +20,12 @@ public class CityForecast {
 
     @JsonCreator
     public CityForecast(
-            @JsonProperty("data") List<ForecastWeather> forecastWeatherList,
+            @JsonProperty("data") List<ForecastWeather> dailyWeatherForecasts,
             @JsonProperty("city_name") String cityName,
             @JsonProperty("lon") double lon,
             @JsonProperty("lat") double lat,
             @JsonProperty("country_code") String countryCode){
-        this.forecastWeatherList = forecastWeatherList;
+        this.forecastWeatherList = dailyWeatherForecasts;
         this.cityName = cityName;
         this.lon = lon;
         this.lat = lat;

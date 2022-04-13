@@ -21,22 +21,20 @@ public class WeatherController {
     private final ForecastResource parseService;
     private final WeatherService weatherService;
     private final BestWeatherSelector bestWeatherSelector;
-    private final Clock clock;
 
-    public WeatherController(ForecastResource parseService, WeatherService weatherService, BestWeatherSelector bestWeatherSelector, Clock clock) {
+    public WeatherController(ForecastResource parseService, WeatherService weatherService, BestWeatherSelector bestWeatherSelector) {
         this.parseService = parseService;
         this.weatherService = weatherService;
         this.bestWeatherSelector = bestWeatherSelector;
-        this.clock = clock;
     }
 
     @GetMapping
     ResponseEntity<?> getBestWeatherFromApiByDay(@RequestParam("date") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) throws JsonProcessingException {
-        if(date.isAfter(LocalDate.now(clock).minusDays(1)) && date.isBefore(LocalDate.now(clock).plusDays(17))){
-            var forecast = weatherService.getForecast(date);
-            var bestWeatherResponse = bestWeatherSelector.getBestCity(forecast);
-            return bestWeatherResponse.map(weather -> new ResponseEntity<>(weather, HttpStatus.OK)).orElseGet(() -> ResponseEntity.noContent().build());
+        if(!weatherService.isValidDate(date)){
+            return ResponseEntity.badRequest().body("Date is wrong!");
         }
-        return ResponseEntity.badRequest().body("Date is wrong!");
+        var forecast = weatherService.getForecast(date);
+        var bestWeatherResponse = bestWeatherSelector.getBestCity(forecast);
+        return bestWeatherResponse.map(weather -> new ResponseEntity<>(weather, HttpStatus.OK)).orElseGet(() -> ResponseEntity.noContent().build());
     }
 }

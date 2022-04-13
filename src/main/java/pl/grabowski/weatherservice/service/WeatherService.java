@@ -4,10 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.grabowski.weatherservice.controller.dto.Weather;
 import pl.grabowski.weatherservice.domain.CityForecast;
 import pl.grabowski.weatherservice.config.AppCity;
+
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,7 @@ public class WeatherService {
     private final ForecastResource forecastResource;
     private final ObjectMapper objectMapper;
     private final AppCity city;
+    private final Clock clock;
 
     private CityForecast jsonParseToObject(String json) throws JsonProcessingException {
         return objectMapper.readValue(json, new TypeReference<>() {
@@ -37,6 +41,9 @@ public class WeatherService {
                 forecast.getForecastByDate(date).get().getWindSpeed(),
                 forecast.getForecastByDate(date).get().getTemp()
         )).collect(Collectors.toList());
+    }
 
+    public boolean isValidDate(LocalDate date){
+        return date.isAfter(LocalDate.now(clock).minusDays(1)) && date.isBefore(LocalDate.now(clock).plusDays(17));
     }
 }
