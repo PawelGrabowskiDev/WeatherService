@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.jayway.jsonpath.JsonPath;
-import org.junit.Rule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,15 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import pl.grabowski.weatherservice.exceptions.WeatherApiExceptions;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -29,7 +25,6 @@ class WeatherServiceApplicationIT {
     @LocalServerPort
     private int port;
 
-    @Rule
     WireMockServer wireMock = new WireMockServer ( WireMockConfiguration.wireMockConfig().port(9090));
 
     @Autowired
@@ -113,7 +108,7 @@ class WeatherServiceApplicationIT {
     }
 
     @Test
-    void should_return_error_if_date_is_invalid(){
+    void should_return_error_if_date_is_not_valid(){
         UriComponents url = UriComponentsBuilder
                 .fromHttpUrl("http://localhost:"+port+"/weather")
                 .queryParam("date", "27-05-2022")
@@ -122,6 +117,23 @@ class WeatherServiceApplicationIT {
         var result = restTemplate.getForEntity(url.toString(),String.class);
         assertThat(result.getStatusCodeValue()).isEqualTo(400);
         assertThat(result.getBody()).isEqualTo("Date is wrong!");
+    }
+
+    @Test
+    void Should_return_response_as_json() {
+        //given
+        firstCity("BadConditions.json");
+        secondCity("GoodConditions.json");
+        UriComponents url = UriComponentsBuilder
+                .fromHttpUrl("http://localhost:"+port+"/weather")
+                .queryParam("date", "12-04-2022")
+                .build();
+        //when
+        var result = restTemplate.getForEntity(url.toString(), String.class);
+
+        // then
+        assertThat(result.getStatusCode().is2xxSuccessful()).isTrue();
+        assertThat(result.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
     }
 
 }

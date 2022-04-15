@@ -1,51 +1,50 @@
 package pl.grabowski.weatherservice.service;
 
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
-import pl.grabowski.weatherservice.config.AppConfig;
-import pl.grabowski.weatherservice.config.WeatherbitApiKey;
-
-import javax.servlet.UnavailableException;
-import java.net.URI;
-import java.nio.charset.Charset;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+
 import static pl.grabowski.weatherservice.config.WeatherbitApiKey.ApiKey;
 
-@RunWith(MockitoJUnitRunner.class)
-@TestPropertySource
+@ExtendWith(MockitoExtension.class)
+@PropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
 class ForecastResourceTest {
 
-    RestTemplate mockRestTemplate = mock(RestTemplate.class);
-    ForecastResource forecastResource = new ForecastResource(mockRestTemplate);
+    @Mock
+    RestTemplate mockRestTemplate;
+    ForecastResource forecastResource;
+
+    @BeforeEach
+    public void setup(){
+        forecastResource = new ForecastResource("http://localhost:9090/test/weather/api", mockRestTemplate);
+    }
 
     @Test
-    void getForecast() throws UnavailableException {
+    void should_build_valid_url_to_external_api(){
         //given
-        var validUrl = "https://api.weatherbit.io/v2.0/forecast/daily?&lat=12&lon=43&key="+ ApiKey;
+        var validUrl = "http://localhost:9090/test/weather/api?lat=12.0&lon=43.0&key="+ ApiKey;
         //when
-        given(forecastResource.getForecast(12,43)).willReturn("");
-        verify(mockRestTemplate).getForObject(validUrl, String.class);
+        forecastResource.getForecast(12.0,43.0);
+        //Then
+        Mockito.verify(mockRestTemplate).getForObject(validUrl, String.class);
+    }
+
+    @Test
+    void should_pass_error_from_rest_template(){
+        //given
+
+        //when
+        forecastResource.getForecast(12.0,43.0);
+        //Then
+
     }
 }

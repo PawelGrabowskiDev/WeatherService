@@ -1,6 +1,9 @@
 package pl.grabowski.weatherservice.service;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -22,8 +25,13 @@ public class ForecastResource {
     private String weatherApiUrl;
     private final RestTemplate restTemplate;
 
-
+    @Autowired
     public ForecastResource(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    public ForecastResource(String weatherApiUrl, RestTemplate restTemplate) {
+        this.weatherApiUrl = weatherApiUrl;
         this.restTemplate = restTemplate;
     }
 
