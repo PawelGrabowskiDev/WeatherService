@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.grabowski.weatherservice.controller.dto.Weather;
 import pl.grabowski.weatherservice.domain.CityForecast;
 import pl.grabowski.weatherservice.config.AppCity;
+import pl.grabowski.weatherservice.integration.ForecastResource;
 
 import java.time.Clock;
 import java.time.LocalDate;

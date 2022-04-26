@@ -10,7 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
-import static org.mockito.BDDMockito.given;
+import pl.grabowski.weatherservice.integration.ForecastResource;
 
 import static pl.grabowski.weatherservice.config.WeatherbitApiKey.ApiKey;
 

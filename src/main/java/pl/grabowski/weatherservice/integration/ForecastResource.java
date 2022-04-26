@@ -1,11 +1,13 @@
-package pl.grabowski.weatherservice.service;
+package pl.grabowski.weatherservice.integration;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
@@ -17,7 +19,7 @@ import javax.servlet.UnavailableException;
 import static pl.grabowski.weatherservice.config.WeatherbitApiKey.ApiKey;
 
 @Slf4j
-@Service
+@Component
 
 public class ForecastResource {
 
@@ -35,6 +37,7 @@ public class ForecastResource {
         this.restTemplate = restTemplate;
     }
 
+    @Cacheable(cacheNames = "Forecast")
     public String getForecast(double lat, double lon) {
         UriComponents uriComponents = UriComponentsBuilder
                 .fromHttpUrl(this.weatherApiUrl)

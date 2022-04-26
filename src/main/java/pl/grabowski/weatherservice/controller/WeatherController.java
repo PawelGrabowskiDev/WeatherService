@@ -7,10 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.grabowski.weatherservice.service.BestWeatherSelector;
-import pl.grabowski.weatherservice.service.ForecastResource;
+import pl.grabowski.weatherservice.integration.ForecastResource;
 import pl.grabowski.weatherservice.service.WeatherService;
 
-import java.time.Clock;
 import java.time.LocalDate;
 
 @Slf4j
