@@ -1,13 +1,16 @@
 package pl.grabowski.weatherservice.config;
 
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Clock;
+import java.time.Duration;
 
 @Configuration
 @EnableCaching
@@ -15,7 +18,10 @@ public class AppConfig {
 
     @Bean
     RestTemplate getRestTemplate(){
-        return new RestTemplate();
+        return new RestTemplateBuilder()
+                .setConnectTimeout(Duration.ofMillis(3000))
+                .setReadTimeout(Duration.ofMillis(3000))
+                .build();
     }
 
     @Bean
