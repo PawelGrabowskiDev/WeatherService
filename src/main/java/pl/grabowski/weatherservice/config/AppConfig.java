@@ -16,11 +16,13 @@ import java.time.Duration;
 @EnableCaching
 public class AppConfig {
 
+    static final int TIMEOUT = 3000;
+
     @Bean
     RestTemplate getRestTemplate(){
         return new RestTemplateBuilder()
-                .setConnectTimeout(Duration.ofMillis(3000))
-                .setReadTimeout(Duration.ofMillis(3000))
+                .setConnectTimeout(Duration.ofMillis(TIMEOUT))
+                .setReadTimeout(Duration.ofMillis(TIMEOUT))
                 .build();
     }
 
