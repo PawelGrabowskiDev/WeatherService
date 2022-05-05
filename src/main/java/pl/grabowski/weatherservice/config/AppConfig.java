@@ -33,7 +33,7 @@ public class AppConfig {
     }
 
     @Configuration
-    @PropertySource("classpath:application-prod.properties")
+    @PropertySource("classpath:application-prod.yml")
     @Profile(value = "prod")
     static class defaultConfig{
     }

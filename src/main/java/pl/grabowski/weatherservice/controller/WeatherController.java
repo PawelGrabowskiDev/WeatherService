@@ -1,6 +1,7 @@
 package pl.grabowski.weatherservice.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ public class WeatherController {
     }
 
     @GetMapping
+    @CircuitBreaker(name = "forecast", fallbackMethod = "fallBack")
     ResponseEntity<?> getBestWeatherFromApiByDay(@RequestParam("date") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) throws JsonProcessingException {
         if(!weatherService.isValidDate(date)){
             return ResponseEntity.badRequest().body("Date is wrong!");
@@ -35,5 +37,9 @@ public class WeatherController {
         var forecast = weatherService.getForecast(date);
         var bestWeatherResponse = bestWeatherSelector.getBestCity(forecast);
         return bestWeatherResponse.map(weather -> new ResponseEntity<>(weather, HttpStatus.OK)).orElseGet(() -> ResponseEntity.noContent().build());
+    }
+
+    public ResponseEntity<String> fallBack(Exception e){
+        return new ResponseEntity<>("Forecast service is unavailable", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

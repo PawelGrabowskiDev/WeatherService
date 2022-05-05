@@ -1,0 +1,9 @@
+forecastResource:
+    weatherApiUrl: http://localhost:9090/test/weather/api
+
+app:
+    cities:
+    -   lat: 54.695
+        lon: 18.678
+    -   lat: 13.105
+        lon: -59.613
