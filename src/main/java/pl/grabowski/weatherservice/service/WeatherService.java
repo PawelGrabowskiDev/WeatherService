@@ -21,8 +21,10 @@ import java.util.stream.Collectors;
 public class WeatherService {
     private final ForecastResource forecastResource;
     private final ObjectMapper objectMapper;
-    private final AppCity city;
+    private final AppCity cities;
     private final Clock clock;
+
+
 
     private CityForecast jsonParseToObject(String json) throws JsonProcessingException {
         return objectMapper.readValue(json, new TypeReference<>() {
@@ -31,9 +33,8 @@ public class WeatherService {
 
     public List<Weather> getForecast(LocalDate date) throws JsonProcessingException {
         List<CityForecast> citiesForecast = new ArrayList<>();
-        for (int i = 0; i < city.getCities().size(); i++) {
-            var json = forecastResource.getForecast(city.getCities().get(i).get("lat"), city.getCities().get(i).get("lon"));
-            citiesForecast.add(jsonParseToObject(json));
+        for (int i = 0; i < cities.getCities().size(); i++) {
+            citiesForecast.add(forecastResource.getCity(i));
         }
         return citiesForecast.stream().map(forecast -> new Weather(
                 forecast.getCityName(),
