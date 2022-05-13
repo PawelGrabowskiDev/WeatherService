@@ -34,7 +34,7 @@ public class WeatherService {
     public List<Weather> getForecast(LocalDate date) throws JsonProcessingException {
         List<CityForecast> citiesForecast = new ArrayList<>();
         for (int i = 0; i < cities.getCities().size(); i++) {
-            citiesForecast.add(forecastResource.getCity(i));
+            citiesForecast.add(forecastResource.getCityForecast(i));
         }
         return citiesForecast.stream().map(forecast -> new Weather(
                 forecast.getCityName(),

@@ -20,7 +20,7 @@ public class TestConfig {
     }
 
     @Configuration
-    @PropertySource("classpath:application-test.properties")
+    @PropertySource("classpath:application-test.yml")
     @Profile(value = "test")
     static class testConfig{
     }

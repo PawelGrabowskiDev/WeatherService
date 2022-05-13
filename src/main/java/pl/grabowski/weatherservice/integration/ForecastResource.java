@@ -57,7 +57,7 @@ public class ForecastResource {
     }
 
     @Cacheable(cacheNames = "Forecast")
-    public CityForecast getCity(int index) throws JsonProcessingException {
+    public CityForecast getCityForecast(int index) throws JsonProcessingException {
         var json = getForecast(cities.getCities().get(index).get("lat"), cities.getCities().get(index).get("lon"));
         log.info(json);
         return jsonParseToObject(json);
