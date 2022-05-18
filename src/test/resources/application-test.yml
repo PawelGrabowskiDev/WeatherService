@@ -1,3 +1,8 @@
+spring:
+    cache:
+        jcache:
+            type: none
+            config: classpath:ehcache.xml
 forecastResource:
     weatherApiUrl: http://localhost:9090/test/weather/api
 
@@ -7,3 +12,26 @@ app:
         lon: 18.678
     -   lat: 13.105
         lon: -59.613
+management:
+    health:
+        circuitbreakers:
+            enabled: true
+    endpoints:
+        web:
+            exposure:
+                include: health
+    endpoint:
+        health:
+            show-details: always
+
+resilience4j.circuitbreaker:
+    instances:
+        forecast:
+            registerHealthIndicator: true
+            slidingWindowSize: 10
+            permittedNumberOfCallsInHalfOpenState: 3
+            slidingWindowType: COUNT_BASED
+            minimumNumberOfCalls: 5
+            waitDurationInOpenState: 5s
+            failureRateThreshold: 50
+            eventConsumerBufferSize: 10

@@ -3,6 +3,7 @@ package pl.grabowski.weatherservice.integration;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -41,6 +44,7 @@ public class ForecastResource {
         });
     }
 
+    @CircuitBreaker(name = "forecast", fallbackMethod = "fallBack")
     public String getForecast(double lat, double lon) {
         UriComponents uriComponents = UriComponentsBuilder
                 .fromHttpUrl(this.weatherApiUrl)
@@ -61,6 +65,10 @@ public class ForecastResource {
         var json = getForecast(cities.getCities().get(index).get("lat"), cities.getCities().get(index).get("lon"));
         log.info(json);
         return jsonParseToObject(json);
+    }
+
+    public ResponseEntity<String> fallBack(Exception e){
+        return new ResponseEntity<>("Forecast service is unavailable", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 

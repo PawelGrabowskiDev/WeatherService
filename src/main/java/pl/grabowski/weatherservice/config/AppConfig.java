@@ -1,5 +1,6 @@
 package pl.grabowski.weatherservice.config;
 
+import org.springframework.amqp.core.Queue;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,12 @@ public class AppConfig {
     @Profile(value = "prod")
     public Clock clock() {
         return Clock.systemDefaultZone();
+    }
+
+    @Bean
+    @Profile(value = "prod")
+    public Queue myQueue(){
+        return new Queue("forecast", false);
     }
 
     @Configuration
