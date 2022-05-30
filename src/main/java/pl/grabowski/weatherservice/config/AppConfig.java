@@ -31,19 +31,21 @@ public class AppConfig {
     }
 
     @Bean
-    @Profile(value = "prod")
     public Clock clock() {
         return Clock.systemDefaultZone();
     }
 
     @Bean
-    @Profile(value = "prod")
-    public Queue myQueue(){
-        return new Queue("forecast", false);
+    public Queue currentForecastQueue(){
+        return new Queue("current_forecast", false);
     }
 
     @Bean
-    @Profile(value = "prod")
+    public Queue onRequestForecastQueue(){
+        return new Queue("forecast_request", false);
+    }
+
+    @Bean
     public ConnectionFactory connectionFactory() {
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory("localhost");
         connectionFactory.setUsername("guest");
@@ -52,7 +54,6 @@ public class AppConfig {
     }
 
     @Bean
-    @Profile(value = "prod")
     public Jackson2JsonMessageConverter jsonMessageConverter(){
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
@@ -70,7 +71,6 @@ public class AppConfig {
 
     @Configuration
     @PropertySource("classpath:application-prod.yml")
-    @Profile(value = "prod")
     static class defaultConfig{
     }
 }

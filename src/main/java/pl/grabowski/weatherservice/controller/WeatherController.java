@@ -27,7 +27,7 @@ public class WeatherController {
             return ResponseEntity.badRequest().body("Date is wrong!");
         }
         var bestWeatherResponse = weatherService.getBestWeather(date);
-        bestWeatherResponse.ifPresent(rabbitTemplate::convertAndSend);
+        bestWeatherResponse.ifPresent(request -> rabbitTemplate.convertAndSend("forecast_request", request));
         return bestWeatherResponse
                 .map(weather -> new ResponseEntity<>(weather, HttpStatus.OK))
                 .orElseGet(() -> ResponseEntity.noContent().build());
